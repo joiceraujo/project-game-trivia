@@ -1,5 +1,5 @@
 const initialState = {
-  email: '',
+  name: '',
 };
 
 function loginReducer(state = initialState, action) {
@@ -7,7 +7,7 @@ function loginReducer(state = initialState, action) {
   case 'LOGIN':
     return {
       ...state,
-      email: action.value,
+      name: action.value,
     };
   default:
     return state;

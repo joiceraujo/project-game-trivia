@@ -1,4 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { saveUser } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -29,6 +32,13 @@ class Login extends React.Component {
     return regex.test(email);
   }
 
+  handleSubmit = () => {
+    const { dispatchLogin, history } = this.props;
+    const { name } = this.state;
+    dispatchLogin(name);
+    history.push('/settings');
+  }
+
   render() {
     const { buttonEnable, email, name } = this.state;
     return (
@@ -57,10 +67,28 @@ class Login extends React.Component {
           >
             Play
           </button>
+          <button
+            type="submit"
+            data-testid="btn-settings"
+            onClick={ this.handleSubmit }
+          >
+            Settings
+          </button>
         </form>
       </div>
     );
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  dispatchLogin: (user) => dispatch(saveUser(user)),
+});
+
+Login.propTypes = {
+  dispatchLogin: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Login);
