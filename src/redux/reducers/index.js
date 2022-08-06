@@ -1,9 +1,7 @@
 import { combineReducers } from 'redux';
 
-import loginReducer from './user';
+import settings from './settings';
 
-const reducer = combineReducers({
-  user: loginReducer,
-});
+const rootReducer = combineReducers({ settings });
 
-export default reducer;
+export default rootReducer;

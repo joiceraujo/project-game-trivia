@@ -1,6 +1,6 @@
-export const LOGIN = 'LOGIN';
+export const SETTINGS = 'SETTINGS';
 
-export const saveUser = (payload) => ({
-  type: LOGIN,
+export const goToSettings = (payload) => ({
+  type: SETTINGS,
   payload,
 });

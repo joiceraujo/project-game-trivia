@@ -2,9 +2,9 @@ const initialState = {
   name: '',
 };
 
-function loginReducer(state = initialState, action) {
+function settings(state = initialState, action) {
   switch (action.type) {
-  case 'LOGIN':
+  case 'SETTINGS':
     return {
       ...state,
       name: action.value,
@@ -14,4 +14,4 @@ function loginReducer(state = initialState, action) {
   }
 }
 
-export default loginReducer;
+export default settings;

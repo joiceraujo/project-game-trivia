@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveUser } from '../redux/actions';
+import { goToSettings } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -33,9 +33,8 @@ class Login extends React.Component {
   }
 
   handleSubmit = () => {
-    const { dispatchLogin, history } = this.props;
-    const { name } = this.state;
-    dispatchLogin(name);
+    const { dispatchSettings, history } = this.props;
+    dispatchSettings();
     history.push('/settings');
   }
 
@@ -81,11 +80,11 @@ class Login extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchLogin: (user) => dispatch(saveUser(user)),
+  dispatchSettings: () => dispatch(goToSettings()),
 });
 
 Login.propTypes = {
-  dispatchLogin: PropTypes.func.isRequired,
+  dispatchSettings: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
