@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   constructor() {
@@ -29,6 +30,14 @@ class Login extends React.Component {
     return regex.test(email);
   }
 
+  chamaApi = async (event) => {
+    event.preventDefault();
+    const response = await apiPerguntas();
+    localStorage.setItem('token', response.token);
+    const { history } = this.props;
+    history.push('/teladojogo');
+  }
+
   render() {
     const { buttonEnable, email, name } = this.state;
     return (
@@ -54,6 +63,7 @@ class Login extends React.Component {
             type="submit"
             data-testid="btn-play"
             disabled={ !buttonEnable }
+            onClick={ this.chamaApi }
           >
             Play
           </button>
@@ -62,5 +72,7 @@ class Login extends React.Component {
     );
   }
 }
-
+Login.propTypes = {
+  history: PropTypes.string.isRequired,
+};
 export default Login;
