@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import apiPerguntas from '../services.js/triviaApi';
 
 class Login extends React.Component {
   constructor() {
