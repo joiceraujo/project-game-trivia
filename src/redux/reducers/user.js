@@ -1,3 +1,5 @@
+import { NAME_ACTION, EMAIL_ACTION } from '../actions';
+
 const initialState = {
   email: '',
   name: '',
@@ -5,12 +7,12 @@ const initialState = {
 
 function user(state = initialState, action) {
   switch (action.type) {
-  case 'EMAIL_ACTION':
+  case EMAIL_ACTION:
     return {
       ...state,
       email: action.payload,
     };
-  case 'NAME_ACTION':
+  case NAME_ACTION:
     return {
       ...state,
       name: action.payload,

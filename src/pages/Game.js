@@ -6,7 +6,6 @@ class Game extends React.Component {
     return (
       <div>
         <Header />
-        Game
       </div>
     );
   }

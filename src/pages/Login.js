@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import apiPerguntas from '../services.js/triviaApi';
-import { goToSettings, emailAction } from '../redux/actions';
+import { goToSettings, emailAction, nameAction } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -37,15 +37,16 @@ class Login extends React.Component {
     event.preventDefault();
     const response = await apiPerguntas();
     localStorage.setItem('token', response.token);
-    const { history } = this.props;
+    const { history, emailDispatch, nameDispatch } = this.props;
+    const { email, name } = this.state;
+    emailDispatch(email);
+    nameDispatch(name);
     history.push('/teladojogo');
   }
 
   handleSubmit = () => {
-    const { dispatchSettings, history, emailDispatch } = this.props;
-    const { email } = this.state;
+    const { dispatchSettings, history } = this.props;
     dispatchSettings();
-    emailDispatch(email);
     history.push('/settings');
   }
 
@@ -98,6 +99,7 @@ Login.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
   dispatchSettings: () => dispatch(goToSettings()),
   emailDispatch: (email) => dispatch(emailAction(email)),
+  nameDispatch: (name) => dispatch(nameAction(name)),
 });
 
 Login.propTypes = {
@@ -106,6 +108,8 @@ Login.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   emailDispatch: PropTypes.func.isRequired,
+  nameDispatch: PropTypes.func.isRequired,
+
 };
 
 export default connect(null, mapDispatchToProps)(Login);
