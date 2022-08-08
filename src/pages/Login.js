@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import apiPerguntas from '../services.js/triviaApi';
 import { goToSettings } from '../redux/actions';
 
 class Login extends React.Component {
@@ -31,6 +32,14 @@ class Login extends React.Component {
     const regex = /\S+@\S+\.\S+/;
     return regex.test(email);
   }
+
+  chamaApi = async (event) => {
+    event.preventDefault();
+    const response = await apiPerguntas();
+    localStorage.setItem('token', response.token);
+    const { history } = this.props;
+    history.push('/teladojogo');
+   }
 
   handleSubmit = () => {
     const { dispatchSettings, history } = this.props;
@@ -63,6 +72,7 @@ class Login extends React.Component {
             type="submit"
             data-testid="btn-play"
             disabled={ !buttonEnable }
+            onClick={ this.chamaApi }
           >
             Play
           </button>
@@ -78,6 +88,10 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.string.isRequired,
+};
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchSettings: () => dispatch(goToSettings()),
