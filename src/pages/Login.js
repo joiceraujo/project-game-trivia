@@ -39,7 +39,7 @@ class Login extends React.Component {
     localStorage.setItem('token', response.token);
     const { history } = this.props;
     history.push('/teladojogo');
-   }
+  }
 
   handleSubmit = () => {
     const { dispatchSettings, history } = this.props;
