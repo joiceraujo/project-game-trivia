@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import apiPerguntas from '../services.js/triviaApi';
+import { goToSettings } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -37,6 +39,12 @@ class Login extends React.Component {
     localStorage.setItem('token', response.token);
     const { history } = this.props;
     history.push('/teladojogo');
+   }
+
+  handleSubmit = () => {
+    const { dispatchSettings, history } = this.props;
+    dispatchSettings();
+    history.push('/settings');
   }
 
   render() {
@@ -68,12 +76,32 @@ class Login extends React.Component {
           >
             Play
           </button>
+          <button
+            type="submit"
+            data-testid="btn-settings"
+            onClick={ this.handleSubmit }
+          >
+            Settings
+          </button>
         </form>
       </div>
     );
   }
 }
+
 Login.propTypes = {
   history: PropTypes.string.isRequired,
 };
-export default Login;
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchSettings: () => dispatch(goToSettings()),
+});
+
+Login.propTypes = {
+  dispatchSettings: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Login);
