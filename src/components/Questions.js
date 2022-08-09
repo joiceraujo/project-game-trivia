@@ -15,6 +15,7 @@ class Questions extends React.Component {
     correctSelection: 0,
     logout: false,
     timer: 35,
+    nextButton: false,
   };
 
   componentDidMount = async () => {
@@ -45,7 +46,11 @@ class Questions extends React.Component {
   };
 
   handleAnswers = ({ target }, question) => {
-    this.setState({ correct: 'correctAnswer', wrong: 'wrongAnswer' });
+    this.setState({
+      correct: 'correctAnswer',
+      wrong: 'wrongAnswer',
+      nextButton: true,
+    });
 
     if (target.name === 'correct') {
       const { timer } = this.state;
@@ -77,6 +82,18 @@ class Questions extends React.Component {
     }, ONE_SEC);
   }
 
+  setNextQuestion = () => {
+    const { index, questions } = this.state;
+    if (index < questions.length - 1) {
+      this.setState({
+        index: index + 1,
+        nextButton: false,
+        correct: '',
+        wrong: '',
+      });
+    }
+  }
+
   render() {
     const {
       questions,
@@ -86,6 +103,7 @@ class Questions extends React.Component {
       correctSelection,
       logout,
       timer,
+      nextButton,
     } = this.state;
 
     return (
@@ -168,6 +186,15 @@ class Questions extends React.Component {
               </section>
             )}
           </div>
+        )}
+        {nextButton && (
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.setNextQuestion }
+          >
+            Next
+          </button>
         )}
         { logout && <Redirect to="/" />}
       </div>
