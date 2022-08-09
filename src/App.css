@@ -4,6 +4,14 @@ body {
   padding: 0;
 }
 
+.correctAnswer {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.wrongAnswer {
+  border: 3px solid red;
+}
+
 .App {
   text-align: center;
 }
