@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { saveQuestions } from '../redux/actions';
 
+const TIMER_START = 30;
+
 class Questions extends React.Component {
   state = {
     correct: '',
@@ -12,6 +14,7 @@ class Questions extends React.Component {
     questions: [],
     correctSelection: 0,
     logout: false,
+    timer: 35,
   };
 
   componentDidMount = async () => {
@@ -19,6 +22,11 @@ class Questions extends React.Component {
     await this.getQuestions(token);
     const random = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
     this.setState({ correctSelection: random });
+    this.counter();
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.counter);
   }
 
   getQuestions = async (token) => {
@@ -40,6 +48,16 @@ class Questions extends React.Component {
     this.setState({ correct: 'correctAnswer', wrong: 'wrongAnswer' });
   };
 
+  counter = () => {
+    const ONE_SEC = 1000;
+    setInterval(() => {
+      const { timer } = this.state;
+      if (timer > 0) {
+        this.setState({ timer: timer - 1 });
+      }
+    }, ONE_SEC);
+  }
+
   render() {
     const {
       questions,
@@ -48,6 +66,7 @@ class Questions extends React.Component {
       index,
       correctSelection,
       logout,
+      timer,
     } = this.state;
 
     return (
@@ -55,6 +74,8 @@ class Questions extends React.Component {
         {questions.length > 0 && (
           <div>
             <p data-testid="question-category">{questions[index].category}</p>
+
+            {timer <= TIMER_START && <p>{timer}</p>}
 
             <p data-testid="question-text">{questions[index].question}</p>
 
@@ -70,6 +91,7 @@ class Questions extends React.Component {
                           data-testid={ `wrong-answer-${position}` }
                           name="wrong"
                           className={ wrong }
+                          disabled={ timer <= 0 }
                         >
                           {element}
                         </button>
@@ -84,6 +106,7 @@ class Questions extends React.Component {
                     name="correct"
                     className={ correct }
                     onClick={ this.handleAnswers }
+                    disabled={ timer <= 0 }
                   >
                     {questions[index].correct_answer}
                   </button>
@@ -99,6 +122,7 @@ class Questions extends React.Component {
                     name="correct"
                     className={ correct }
                     onClick={ this.handleAnswers }
+                    disabled={ timer <= 0 }
                   >
                     {questions[index].correct_answer}
                   </button>
@@ -115,6 +139,7 @@ class Questions extends React.Component {
                           data-testid={ `wrong-answer-${position}` }
                           name="wrong"
                           className={ wrong }
+                          disabled={ timer <= 0 }
                         >
                           {element}
                         </button>
