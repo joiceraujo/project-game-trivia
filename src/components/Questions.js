@@ -16,6 +16,7 @@ class Questions extends React.Component {
     logout: false,
     timer: 35,
     nextButton: false,
+    goToFeedbackPage: false,
   };
 
   componentDidMount = async () => {
@@ -90,7 +91,10 @@ class Questions extends React.Component {
         nextButton: false,
         correct: '',
         wrong: '',
+        timer: 30,
       });
+    } else {
+      this.setState({ goToFeedbackPage: true });
     }
   }
 
@@ -104,6 +108,7 @@ class Questions extends React.Component {
       logout,
       timer,
       nextButton,
+      goToFeedbackPage,
     } = this.state;
 
     return (
@@ -197,6 +202,7 @@ class Questions extends React.Component {
           </button>
         )}
         { logout && <Redirect to="/" />}
+        { goToFeedbackPage && <Redirect to="/feedback" /> }
       </div>
     );
   }
