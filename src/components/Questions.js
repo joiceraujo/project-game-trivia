@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { saveQuestions } from '../redux/actions';
+import { saveQuestions, saveScore } from '../redux/actions';
 
 const TIMER_START = 30;
 
@@ -44,9 +44,28 @@ class Questions extends React.Component {
     this.setState({ questions: data.results });
   };
 
-  handleAnswers = () => {
+  handleAnswers = ({ target }, question) => {
     this.setState({ correct: 'correctAnswer', wrong: 'wrongAnswer' });
+
+    if (target.name === 'correct') {
+      const { timer } = this.state;
+      const { difficulty } = question;
+      const TEN = 10;
+      const { scoreDispatch } = this.props;
+      const score = TEN + (timer > TIMER_START
+        ? TIMER_START : Number(timer) * this.getScoreValue(difficulty));
+      scoreDispatch(score);
+    }
   };
+
+  getScoreValue = (difficulty) => {
+    const HARD_VALUE = 3;
+    const MEDIUM_VALUE = 2;
+    const EASY_VALUE = 1;
+    if (difficulty === 'hard') { return HARD_VALUE; }
+    if (difficulty === 'medium') { return MEDIUM_VALUE; }
+    return EASY_VALUE;
+  }
 
   counter = () => {
     const ONE_SEC = 1000;
@@ -87,7 +106,7 @@ class Questions extends React.Component {
                       <div key={ position }>
                         <button
                           type="button"
-                          onClick={ this.handleAnswers }
+                          onClick={ (e) => this.handleAnswers(e, questions[index]) }
                           data-testid={ `wrong-answer-${position}` }
                           name="wrong"
                           className={ wrong }
@@ -105,7 +124,7 @@ class Questions extends React.Component {
                     id={ index }
                     name="correct"
                     className={ correct }
-                    onClick={ this.handleAnswers }
+                    onClick={ (e) => this.handleAnswers(e, questions[index]) }
                     disabled={ timer <= 0 }
                   >
                     {questions[index].correct_answer}
@@ -121,7 +140,7 @@ class Questions extends React.Component {
                     id={ index }
                     name="correct"
                     className={ correct }
-                    onClick={ this.handleAnswers }
+                    onClick={ (e) => this.handleAnswers(e, questions[index]) }
                     disabled={ timer <= 0 }
                   >
                     {questions[index].correct_answer}
@@ -135,7 +154,7 @@ class Questions extends React.Component {
                         <button
                           id="wrong"
                           type="button"
-                          onClick={ this.handleAnswers }
+                          onClick={ (e) => this.handleAnswers(e, questions[index]) }
                           data-testid={ `wrong-answer-${position}` }
                           name="wrong"
                           className={ wrong }
@@ -160,10 +179,12 @@ Questions.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }),
   saveQuestion: PropTypes.func,
   getQuestions: PropTypes.array,
+  scoreDispatch: PropTypes.func,
 }.isRequired;
 
 const mapDispatchToProps = (dispatch) => ({
   saveQuestion: (questions) => dispatch(saveQuestions(questions)),
+  scoreDispatch: (score) => dispatch(saveScore(score)),
 });
 
 const mapStateToProps = (store) => ({
