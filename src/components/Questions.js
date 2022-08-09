@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { saveQuestions } from '../redux/actions';
 
 class Questions extends React.Component {
   state = {
@@ -24,6 +26,8 @@ class Questions extends React.Component {
     const url = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const getQuestion = await fetch(url);
     const data = await getQuestion.json();
+    const { saveQuestion } = this.props;
+    saveQuestion(data);
 
     if (data.response_code === magicErrorNum) {
       localStorage.removeItem('token');
@@ -32,16 +36,8 @@ class Questions extends React.Component {
     this.setState({ questions: data.results });
   };
 
-  handleAnswers = (event) => {
-    const { target } = event;
-    if (target.name === 'correct') {
-      this.setState({ correct: 'Game-correct' },
-        () => this.setState({ wrong: 'Game-wrong' }));
-    }
-    if (target.name === 'wrong') {
-      this.setState({ correct: 'Game-correct' },
-        () => this.setState({ wrong: 'Game-wrong' }));
-    }
+  handleAnswers = () => {
+    this.setState({ correct: 'correctAnswer', wrong: 'wrongAnswer' });
   };
 
   render() {
@@ -61,6 +57,7 @@ class Questions extends React.Component {
             <p data-testid="question-category">{questions[index].category}</p>
 
             <p data-testid="question-text">{questions[index].question}</p>
+
             {questions.length > 0 && correctSelection === 1 ? (
               <section>
                 <div data-testid="answer-options">
@@ -136,6 +133,16 @@ class Questions extends React.Component {
 
 Questions.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }),
+  saveQuestion: PropTypes.func,
+  getQuestions: PropTypes.array,
 }.isRequired;
 
-export default Questions;
+const mapDispatchToProps = (dispatch) => ({
+  saveQuestion: (questions) => dispatch(saveQuestions(questions)),
+});
+
+const mapStateToProps = (store) => ({
+  getQuestions: store.questionsReducer.questions,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Questions);
