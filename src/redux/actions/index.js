@@ -5,6 +5,7 @@ export const SAVE_QUESTIONS = 'SAVE_QUESTIONS';
 export const SAVE_SCORE = 'SAVE_SCORE';
 export const SAVE_ASSERTIONS = 'SAVE_ASSERTIONS';
 export const RESET_GAME = 'RESET_GAME';
+export const SAVE_GRAVATAR = 'SAVE_GRAVATAR';
 
 export const goToSettings = (payload) => ({
   type: SETTINGS,
@@ -35,4 +36,8 @@ export const saveAssertions = (assertions) => (
 
 export const resetGame = () => (
   { type: RESET_GAME }
+);
+
+export const saveGravatar = (gravatar) => (
+  { type: SAVE_GRAVATAR, gravatar }
 );

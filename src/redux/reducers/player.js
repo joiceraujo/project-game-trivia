@@ -1,11 +1,12 @@
 import { NAME_ACTION, EMAIL_ACTION, SAVE_SCORE,
-  SAVE_ASSERTIONS, RESET_GAME } from '../actions';
+  SAVE_ASSERTIONS, RESET_GAME, SAVE_GRAVATAR } from '../actions';
 
 const initialState = {
   email: '',
   name: '',
   assertions: 0,
   score: 0,
+  gravatar: '',
 };
 
 function player(state = initialState, action) {
@@ -32,7 +33,13 @@ function player(state = initialState, action) {
     };
   case RESET_GAME:
     return {
-      state: initialState,
+      ...state,
+      ...initialState,
+    };
+  case SAVE_GRAVATAR:
+    return {
+      ...state,
+      gravatar: action.gravatar,
     };
   default:
     return state;

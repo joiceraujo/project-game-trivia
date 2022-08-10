@@ -106,7 +106,21 @@ class Questions extends React.Component {
     } else {
       const { assertionsDispatch } = this.props;
       assertionsDispatch(assertions);
+      this.savePlayerFinalScore();
       this.setState({ goToFeedbackPage: true });
+    }
+  }
+
+  savePlayerFinalScore = () => {
+    const { name, score, gravatar } = this.props;
+    const player = { name, score, picture: gravatar };
+
+    if (!localStorage.ranking) {
+      localStorage.setItem('ranking', JSON.stringify([player]));
+    } else {
+      const prevRank = JSON.parse(localStorage.ranking);
+      const newRank = [...prevRank, player];
+      localStorage.setItem('ranking', JSON.stringify(newRank));
     }
   }
 
@@ -190,6 +204,9 @@ Questions.propTypes = {
   getQuestions: PropTypes.array,
   scoreDispatch: PropTypes.func,
   assertionsDispatch: PropTypes.func,
+  gravatar: PropTypes.string,
+  name: PropTypes.string,
+  score: PropTypes.number,
 }.isRequired;
 
 const mapDispatchToProps = (dispatch) => ({
@@ -200,6 +217,9 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (store) => ({
   getQuestions: store.questionsReducer.questions,
+  gravatar: store.player.gravatar,
+  name: store.player.name,
+  score: store.player.score,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);
