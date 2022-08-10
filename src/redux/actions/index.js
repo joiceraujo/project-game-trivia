@@ -4,6 +4,7 @@ export const NAME_ACTION = 'NAME_ACTION';
 export const SAVE_QUESTIONS = 'SAVE_QUESTIONS';
 export const SAVE_SCORE = 'SAVE_SCORE';
 export const SAVE_ASSERTIONS = 'SAVE_ASSERTIONS';
+export const RESET_GAME = 'RESET_GAME';
 
 export const goToSettings = (payload) => ({
   type: SETTINGS,
@@ -30,4 +31,8 @@ export const saveScore = (score) => (
 
 export const saveAssertions = (assertions) => (
   { type: SAVE_ASSERTIONS, assertions }
+);
+
+export const resetGame = () => (
+  { type: RESET_GAME }
 );
