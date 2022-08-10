@@ -12,19 +12,18 @@ class Questions extends React.Component {
     wrong: '',
     index: 0,
     questions: [],
-    correctSelection: 0,
     logout: false,
     timer: 35,
     nextButton: false,
     goToFeedbackPage: false,
+    currentAnswers: [],
   };
 
   componentDidMount = async () => {
     const token = localStorage.getItem('token');
     await this.getQuestions(token);
-    const random = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
-    this.setState({ correctSelection: random });
     this.counter();
+    this.setState({ currentAnswers: this.sortQuestions() });
   }
 
   componentWillUnmount = () => {
@@ -92,10 +91,28 @@ class Questions extends React.Component {
         correct: '',
         wrong: '',
         timer: 30,
+      }, () => {
+        this.setState({ currentAnswers: this.sortQuestions() });
       });
     } else {
       this.setState({ goToFeedbackPage: true });
     }
+  }
+
+  sortQuestions = () => {
+    const { index, questions } = this.state;
+    const ans = [
+      ...questions[index].incorrect_answers,
+    ];
+    const randomNumber = Math.round(Math.random() * (ans.length));
+    console.log(randomNumber);
+    ans.splice(randomNumber, 0, questions[index].correct_answer);
+    return ans;
+  }
+
+  isAnswerCorrect = (answer) => {
+    const { index, questions } = this.state;
+    return answer === questions[index].correct_answer;
   }
 
   render() {
@@ -104,11 +121,11 @@ class Questions extends React.Component {
       correct,
       wrong,
       index,
-      correctSelection,
       logout,
       timer,
       nextButton,
       goToFeedbackPage,
+      currentAnswers,
     } = this.state;
 
     return (
@@ -121,75 +138,24 @@ class Questions extends React.Component {
 
             <p data-testid="question-text">{questions[index].question}</p>
 
-            {questions.length > 0 && correctSelection === 1 ? (
-              <section>
-                <div data-testid="answer-options">
-                  {questions[index].incorrect_answers.reverse()
-                    .map((element, position) => (
-                      <div key={ position }>
-                        <button
-                          type="button"
-                          onClick={ (e) => this.handleAnswers(e, questions[index]) }
-                          data-testid={ `wrong-answer-${position}` }
-                          name="wrong"
-                          className={ wrong }
-                          disabled={ timer <= 0 }
-                        >
-                          {element}
-                        </button>
-                      </div>
-                    ))}
-                </div>
-                <div data-testid="answer-options">
+            <div data-testid="answer-options">
+              {
+                currentAnswers.map((el, position) => (
                   <button
+                    key={ el }
                     type="button"
-                    data-testid="correct-answer"
-                    id={ index }
-                    name="correct"
-                    className={ correct }
                     onClick={ (e) => this.handleAnswers(e, questions[index]) }
+                    data-testid={ this.isAnswerCorrect(el)
+                      ? 'correct-answer' : `wrong-answer-${position}` }
+                    name={ this.isAnswerCorrect(el) ? 'correct' : 'wrong' }
+                    className={ this.isAnswerCorrect(el) ? correct : wrong }
                     disabled={ timer <= 0 }
                   >
-                    {questions[index].correct_answer}
+                    {el}
                   </button>
-                </div>
-              </section>
-            ) : (
-              <section>
-                <div data-testid="answer-options">
-                  <button
-                    type="button"
-                    data-testid="correct-answer"
-                    id={ index }
-                    name="correct"
-                    className={ correct }
-                    onClick={ (e) => this.handleAnswers(e, questions[index]) }
-                    disabled={ timer <= 0 }
-                  >
-                    {questions[index].correct_answer}
-                  </button>
-                </div>
-                <div data-testid="answer-options">
-                  {questions[index].incorrect_answers
-                    .reverse()
-                    .map((element, position) => (
-                      <div key={ position }>
-                        <button
-                          id="wrong"
-                          type="button"
-                          onClick={ (e) => this.handleAnswers(e, questions[index]) }
-                          data-testid={ `wrong-answer-${position}` }
-                          name="wrong"
-                          className={ wrong }
-                          disabled={ timer <= 0 }
-                        >
-                          {element}
-                        </button>
-                      </div>
-                    ))}
-                </div>
-              </section>
-            )}
+                ))
+              }
+            </div>
           </div>
         )}
         {nextButton && (
