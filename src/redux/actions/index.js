@@ -3,6 +3,7 @@ export const EMAIL_ACTION = 'EMAIL_ACTION';
 export const NAME_ACTION = 'NAME_ACTION';
 export const SAVE_QUESTIONS = 'SAVE_QUESTIONS';
 export const SAVE_SCORE = 'SAVE_SCORE';
+export const SAVE_ASSERTIONS = 'SAVE_ASSERTIONS';
 
 export const goToSettings = (payload) => ({
   type: SETTINGS,
@@ -25,4 +26,8 @@ export const saveQuestions = (element) => (
 
 export const saveScore = (score) => (
   { type: SAVE_SCORE, score }
+);
+
+export const saveAssertions = (assertions) => (
+  { type: SAVE_ASSERTIONS, assertions }
 );
