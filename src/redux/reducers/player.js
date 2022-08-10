@@ -1,4 +1,4 @@
-import { NAME_ACTION, EMAIL_ACTION, SAVE_SCORE } from '../actions';
+import { NAME_ACTION, EMAIL_ACTION, SAVE_SCORE, SAVE_ASSERTIONS } from '../actions';
 
 const initialState = {
   email: '',
@@ -23,6 +23,11 @@ function player(state = initialState, action) {
     return {
       ...state,
       score: state.score + action.score,
+    };
+  case SAVE_ASSERTIONS:
+    return {
+      ...state,
+      assertions: action.assertions,
     };
   default:
     return state;

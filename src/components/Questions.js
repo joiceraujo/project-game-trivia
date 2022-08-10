@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { saveQuestions, saveScore } from '../redux/actions';
+import { saveAssertions, saveQuestions, saveScore } from '../redux/actions';
 
 const TIMER_START = 30;
 
@@ -17,6 +17,8 @@ class Questions extends React.Component {
     nextButton: false,
     goToFeedbackPage: false,
     currentAnswers: [],
+    assertions: 0,
+    gotAnswer: false,
   };
 
   componentDidMount = async () => {
@@ -50,9 +52,12 @@ class Questions extends React.Component {
       correct: 'correctAnswer',
       wrong: 'wrongAnswer',
       nextButton: true,
+      gotAnswer: true,
     });
 
-    if (target.name === 'correct') {
+    const { gotAnswer } = this.state;
+
+    if (target.name === 'correct' && !gotAnswer) {
       const { timer } = this.state;
       const { difficulty } = question;
       const TEN = 10;
@@ -60,6 +65,9 @@ class Questions extends React.Component {
       const score = TEN + (timer > TIMER_START
         ? TIMER_START : Number(timer) * this.getScoreValue(difficulty));
       scoreDispatch(score);
+      this.setState((prevState) => ({
+        assertions: prevState.assertions + 1,
+      }));
     }
   };
 
@@ -83,7 +91,7 @@ class Questions extends React.Component {
   }
 
   setNextQuestion = () => {
-    const { index, questions } = this.state;
+    const { index, questions, assertions } = this.state;
     if (index < questions.length - 1) {
       this.setState({
         index: index + 1,
@@ -91,10 +99,13 @@ class Questions extends React.Component {
         correct: '',
         wrong: '',
         timer: 30,
+        gotAnswer: false,
       }, () => {
         this.setState({ currentAnswers: this.sortQuestions() });
       });
     } else {
+      const { assertionsDispatch } = this.props;
+      assertionsDispatch(assertions);
       this.setState({ goToFeedbackPage: true });
     }
   }
@@ -105,7 +116,6 @@ class Questions extends React.Component {
       ...questions[index].incorrect_answers,
     ];
     const randomNumber = Math.round(Math.random() * (ans.length));
-    console.log(randomNumber);
     ans.splice(randomNumber, 0, questions[index].correct_answer);
     return ans;
   }
@@ -179,11 +189,13 @@ Questions.propTypes = {
   saveQuestion: PropTypes.func,
   getQuestions: PropTypes.array,
   scoreDispatch: PropTypes.func,
+  assertionsDispatch: PropTypes.func,
 }.isRequired;
 
 const mapDispatchToProps = (dispatch) => ({
   saveQuestion: (questions) => dispatch(saveQuestions(questions)),
   scoreDispatch: (score) => dispatch(saveScore(score)),
+  assertionsDispatch: (assertions) => dispatch(saveAssertions(assertions)),
 });
 
 const mapStateToProps = (store) => ({
