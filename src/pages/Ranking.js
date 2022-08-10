@@ -19,7 +19,7 @@ class Ranking extends React.Component {
           data-testid="btn-go-home"
           onClick={ this.backToLogin }
         >
-          Ranking
+          Back to home
         </button>
         {
           JSON.parse(localStorage.ranking)
