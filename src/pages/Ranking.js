@@ -21,6 +21,15 @@ class Ranking extends React.Component {
         >
           Ranking
         </button>
+        {
+          JSON.parse(localStorage.ranking)
+            .sort((a, b) => b.score - a.score).map((player, index) => (
+              <div key={ player }>
+                <p data-testid={ `player-name-${index}` }>{player.name}</p>
+                <p data-testid={ `player-score-${index}` }>{player.score}</p>
+              </div>
+            ))
+        }
       </div>);
   }
 }
