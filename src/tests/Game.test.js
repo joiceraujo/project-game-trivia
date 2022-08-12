@@ -110,7 +110,7 @@ describe('Testes a tela do jogo', () => {
   });
 
   it('Deve reiniciar o jogo ao clicar em "Back to home"', async () => {
-    jest.setTimeout(5000);
+    jest.setTimeout(40000);
 
     const { history } = renderWithRouterAndRedux(<App />);
   
@@ -121,7 +121,7 @@ describe('Testes a tela do jogo', () => {
     await waitFor(() => {
       expect(screen.getByTestId('correct-answer')).toBeInTheDocument();
     }, {
-      timeout: 5000,
+      timeout: 40000,
     })
     
     userEvent.click(screen.getByTestId('btn-go-home'));
