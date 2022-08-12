@@ -25,7 +25,7 @@ class Ranking extends React.Component {
           localStorage.ranking !== undefined
             ? JSON.parse(localStorage.ranking)
               .sort((a, b) => b.score - a.score).map((player, index) => (
-                <div key={ player }>
+                <div key={ `${player.name}${index}` }>
                   <p data-testid={ `player-name-${index}` }>{player.name}</p>
                   <p data-testid={ `player-score-${index}` }>{player.score}</p>
                 </div>

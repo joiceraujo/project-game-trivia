@@ -86,6 +86,9 @@ class Questions extends React.Component {
       const { timer } = this.state;
       if (timer > 0) {
         this.setState({ timer: timer - 1 });
+      } else {
+        this.setState({ nextButton: true });
+        clearInterval(this.counter);
       }
     }, ONE_SEC);
   }
@@ -126,12 +129,14 @@ class Questions extends React.Component {
 
   sortQuestions = () => {
     const { index, questions } = this.state;
-    const ans = [
-      ...questions[index].incorrect_answers,
-    ];
-    const randomNumber = Math.round(Math.random() * (ans.length));
-    ans.splice(randomNumber, 0, questions[index].correct_answer);
-    return ans;
+    if (questions.length > 0) {
+      const ans = [
+        ...questions[index].incorrect_answers,
+      ];
+      const randomNumber = Math.round(Math.random() * (ans.length));
+      ans.splice(randomNumber, 0, questions[index].correct_answer);
+      return ans;
+    }
   }
 
   isAnswerCorrect = (answer) => {
@@ -158,7 +163,7 @@ class Questions extends React.Component {
           <div>
             <p data-testid="question-category">{questions[index].category}</p>
 
-            {timer <= TIMER_START && <p>{timer}</p>}
+            {timer <= TIMER_START && <p data-testid="timer">{timer}</p>}
 
             <p data-testid="question-text">{questions[index].question}</p>
 
